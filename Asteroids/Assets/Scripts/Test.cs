@@ -1,8 +1,6 @@
-using System.Text;
-using MVC.Logic;
-using MVC.Logic.Player;
-using MVC.View;
+using Logic.Player;
 using UnityEngine;
+using View;
 
 public class Test : MonoBehaviour
 {
@@ -11,7 +9,6 @@ public class Test : MonoBehaviour
     private void Start()
     {
         PlayerTest();
-        SquareColliderMoveMethodTest();
     }
 
     private void PlayerTest()
@@ -19,11 +16,6 @@ public class Test : MonoBehaviour
         var playerModel = new PlayerModel();
         var playerController = new PlayerController(playerModel, PlayerView);
 
-        playerModel.Position = new UniVector2(0f, 0f);
-    }
-
-    private void SquareColliderMoveMethodTest()
-    {
-        
+        playerModel.Transform.Position = new UniVector2(0f, 0f);
     }
 }

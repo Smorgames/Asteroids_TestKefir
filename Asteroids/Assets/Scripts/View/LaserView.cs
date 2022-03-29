@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MVC.View
+namespace View
 {
     public class LaserView : MonoBehaviour
     {

@@ -1,7 +1,7 @@
-﻿using MVC.Logic.Player;
+﻿using Logic.Player;
 using Services;
 
-namespace MVC.Logic
+namespace Logic
 {
     public class BulletGun
     {
@@ -11,6 +11,6 @@ namespace MVC.Logic
             _playerModel = playerModel;
 
         public void Fire() => 
-            GameFactory.CreateBullet(_playerModel.Position, _playerModel.Direction.Copy());
+            GameFactory.CreateBullet(_playerModel.Transform.Position, _playerModel.Transform.Direction.Copy());
     }
 }

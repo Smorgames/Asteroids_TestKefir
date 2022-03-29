@@ -1,6 +1,6 @@
-﻿using MVC.View;
+﻿using View;
 
-namespace MVC.Logic.Player
+namespace Logic.Player
 {
     public class PlayerController
     {
@@ -23,8 +23,8 @@ namespace MVC.Logic.Player
             _playerView.OnLaserFireRequest += ViewLaserFireRequest;
             _playerView.OnDeltaTimeUpdate += ViewDeltaTimeUpdate;
             
-            _playerModel.OnPositionChanged += ModelPositionChanged;
-            _playerModel.OnRotationChanged += ModelRotationChanged;
+            _playerModel.Transform.OnPositionChanged += ModelPositionChanged;
+            _playerModel.Transform.OnRotationChanged += ModelRotationChanged;
         }
 
         private void ViewDeltaTimeUpdate(float deltaTime)
@@ -43,15 +43,15 @@ namespace MVC.Logic.Player
             _playerModel.Move();
 
         private void ModelPositionChanged() => 
-            _playerView.SetPosition(_playerModel.Position);
+            _playerView.SetPosition(_playerModel.Transform.Position);
 
         private void ViewRotateRequest(float horizontalAxis, UniVector2 moveDirection)
         {
             _playerModel.Rotate(horizontalAxis);
-            _playerModel.Direction = moveDirection;
+            _playerModel.Transform.Direction = moveDirection;
         }
 
         private void ModelRotationChanged() => 
-            _playerView.SetRotation(_playerModel.Rotation);
+            _playerView.SetRotation(_playerModel.Transform.Rotation);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MVC.View
+namespace View
 {
     public class BulletView : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace MVC.View
         private void FixedUpdate() => 
             OnMoveRequest?.Invoke(Time.fixedDeltaTime);
 
-        public void SetPosition(UniVector2 position) =>
+        public void SetPosition(UniVector2 position) => 
             transform.position = position.ToVector2();
     }
 }

@@ -1,6 +1,6 @@
-using MVC.View;
+using View;
 
-namespace MVC.Logic.Bullet
+namespace Logic.Bullet
 {
     public class BulletController
     {
@@ -18,7 +18,6 @@ namespace MVC.Logic.Bullet
         private void SubscribeOnEvents()
         {
             _bulletView.OnMoveRequest += ViewMoveRequest;
-            
             _bulletModel.OnPositionChanged += ModelPositionChanged;
         }
 
@@ -26,6 +25,6 @@ namespace MVC.Logic.Bullet
             _bulletModel.Move(physicDeltaTime);
 
         private void ModelPositionChanged() => 
-            _bulletView.SetPosition(_bulletModel.Position);
+            _bulletView.SetPosition(_bulletModel.Transform.Position);
     }
 }

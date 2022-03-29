@@ -1,4 +1,4 @@
-﻿namespace MVC.Logic.Meteor
+﻿namespace Logic.Meteor
 {
     public class MeteorModel
     {

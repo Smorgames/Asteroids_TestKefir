@@ -1,7 +1,7 @@
-﻿using MVC.Logic.Player;
+﻿using Logic.Player;
 using Services;
 
-namespace MVC.Logic
+namespace Logic
 {
     public class LaserGun
     {

@@ -1,6 +1,6 @@
-﻿using MVC.Logic.Bullet;
-using MVC.View;
+﻿using Logic.Bullet;
 using UnityEngine;
+using View;
 
 namespace Services
 {

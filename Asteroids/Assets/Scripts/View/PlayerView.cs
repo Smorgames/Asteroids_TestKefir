@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MVC.View
+namespace View
 {
     public class PlayerView : MonoBehaviour
     {
