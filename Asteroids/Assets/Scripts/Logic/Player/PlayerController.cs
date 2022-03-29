@@ -26,31 +26,29 @@ namespace Logic.Player
             _playerModel.Transform.OnPositionChanged += ModelPositionChanged;
             _playerModel.Transform.OnRotationChanged += ModelRotationChanged;
         }
-
+        
+        private void ViewMoveRequest() => _playerModel.Move();
+        
+        private void ViewRotateRequest(float horizontalAxis, UniVector2 moveDirection)
+        {
+            _playerModel.Rotate(horizontalAxis);
+            _playerModel.Transform.Direction = moveDirection;
+        }
+        
+        private void ViewBulletFireRequest() => _playerModel.FireBulletGun();
+        
+        private void ViewLaserFireRequest(UniVector2 laserSpawnPosition) => 
+            _playerModel.FireLaserGun(laserSpawnPosition);
+        
         private void ViewDeltaTimeUpdate(float deltaTime)
         {
             _playerModel.DeltaTime = deltaTime;
             _playerModel.OnUpdate?.Invoke();
         }
 
-        private void ViewBulletFireRequest() => 
-            _playerModel.FireBulletGun();
-
-        private void ViewLaserFireRequest(UniVector2 laserSpawnPosition) => 
-            _playerModel.FireLaserGun(laserSpawnPosition);
-
-        private void ViewMoveRequest() => 
-            _playerModel.Move();
-
         private void ModelPositionChanged() => 
             _playerView.SetPosition(_playerModel.Transform.Position);
-
-        private void ViewRotateRequest(float horizontalAxis, UniVector2 moveDirection)
-        {
-            _playerModel.Rotate(horizontalAxis);
-            _playerModel.Transform.Direction = moveDirection;
-        }
-
+        
         private void ModelRotationChanged() => 
             _playerView.SetRotation(_playerModel.Transform.Rotation);
     }

@@ -9,10 +9,10 @@ namespace View
 
         private Vector2 _direction;
 
-        private void FixedUpdate() => 
+        private void Update() => 
             OnMoveRequest?.Invoke(Time.fixedDeltaTime);
 
-        public void SetPosition(UniVector2 position) => 
+        public void SetPosition(UniVector2 position) =>
             transform.position = position.ToVector2();
     }
 }

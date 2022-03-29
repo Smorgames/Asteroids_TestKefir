@@ -1,12 +1,7 @@
-using System;
-using UnityEngine;
-
 namespace Logic.Bullet
 {
     public class BulletModel
     {
-        public Action OnPositionChanged;
-
         public Transform2D Transform { get; }
 
         private readonly float _speed;
@@ -21,7 +16,7 @@ namespace Logic.Bullet
         {
             var newPosition = Transform.Position + Transform.Direction * _speed * physicDeltaTime;
             Transform.Position = newPosition;
-            OnPositionChanged?.Invoke();
+            Transform.OnPositionChanged?.Invoke();
         }
     }
 }

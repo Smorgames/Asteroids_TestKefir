@@ -18,7 +18,7 @@ namespace Logic.Bullet
         private void SubscribeOnEvents()
         {
             _bulletView.OnMoveRequest += ViewMoveRequest;
-            _bulletModel.OnPositionChanged += ModelPositionChanged;
+            _bulletModel.Transform.OnPositionChanged += ModelPositionChanged;
         }
 
         private void ViewMoveRequest(float physicDeltaTime) => 

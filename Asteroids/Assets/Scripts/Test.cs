@@ -1,4 +1,5 @@
 using Logic.Player;
+using Services;
 using UnityEngine;
 using View;
 
@@ -9,6 +10,7 @@ public class Test : MonoBehaviour
     private void Start()
     {
         PlayerTest();
+        MeteorInstantiateTest();
     }
 
     private void PlayerTest()
@@ -18,4 +20,7 @@ public class Test : MonoBehaviour
 
         playerModel.Transform.Position = new UniVector2(0f, 0f);
     }
+
+    private void MeteorInstantiateTest() => 
+        GameFactory.CreateMeteor(3f, new UniVector2(10f, 5f), new UniVector2(-1f, -0.5f));
 }
