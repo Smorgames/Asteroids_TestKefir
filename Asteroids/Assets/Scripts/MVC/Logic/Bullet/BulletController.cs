@@ -1,4 +1,4 @@
-using MVC.View.Bullet;
+using MVC.View;
 
 namespace MVC.Logic.Bullet
 {

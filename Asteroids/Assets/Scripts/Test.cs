@@ -1,13 +1,18 @@
+using System.Text;
+using MVC.Logic;
 using MVC.Logic.Player;
-using MVC.View.Player;
+using MVC.View;
 using UnityEngine;
 
 public class Test : MonoBehaviour
 {
     public PlayerView PlayerView;
     
-    private void Start() => 
+    private void Start()
+    {
         PlayerTest();
+        SquareColliderMoveMethodTest();
+    }
 
     private void PlayerTest()
     {
@@ -15,5 +20,10 @@ public class Test : MonoBehaviour
         var playerController = new PlayerController(playerModel, PlayerView);
 
         playerModel.Position = new UniVector2(0f, 0f);
+    }
+
+    private void SquareColliderMoveMethodTest()
+    {
+        
     }
 }

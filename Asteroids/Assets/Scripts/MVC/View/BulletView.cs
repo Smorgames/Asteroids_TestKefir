@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MVC.View.Bullet
+namespace MVC.View
 {
     public class BulletView : MonoBehaviour
     {

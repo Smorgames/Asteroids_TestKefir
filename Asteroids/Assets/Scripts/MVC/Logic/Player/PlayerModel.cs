@@ -8,6 +8,7 @@ namespace MVC.Logic.Player
         
         public Action OnPositionChanged;
         public Action OnRotationChanged;
+        public Action OnUpdate;
         
         public UniVector2 Position
         {
@@ -34,37 +35,41 @@ namespace MVC.Logic.Player
                 OnRotationChanged?.Invoke();
             }
         }
-        public UniVector2 Direction { set => _direction = value; }
-        public float DeltaTime { set => _deltaTime = value; }
+        public UniVector2 Direction { get; set; }
+
+        public float DeltaTime { get; set; }
 
         private readonly BulletGun _bulletGun;
+        private readonly LaserGun _laserGun;
         private UniVector2 _position;
-        private UniVector2 _direction;
         private float _rotation;
         private float _rotationSpeed = 150f;
         private float _speed = 2f;
-        private float _deltaTime;
 
         public PlayerModel()
         {
-            _direction = new UniVector2(0f, 1f);
+            Direction = new UniVector2(0f, 1f);
             _bulletGun = new BulletGun(this);
+            _laserGun = new LaserGun(2f, this);
         }
 
         public void Move()
         {
-            var newPosition = _position + _direction * _speed * _deltaTime;
+            var newPosition = _position + Direction * _speed * DeltaTime;
             Position = newPosition;
         }
 
         public void Rotate(float horizontalAxis)
         {
-            var delta = horizontalAxis * _rotationSpeed * _deltaTime;
+            var delta = horizontalAxis * _rotationSpeed * DeltaTime;
             var rotation = Rotation + delta;
             Rotation = rotation;
         }
 
-        public void Fire() => 
-            _bulletGun.Fire(_direction.Copy());
+        public void FireBulletGun() => 
+            _bulletGun.Fire();
+
+        public void FireLaserGun(UniVector2 laserSpawnPosition) =>
+            _laserGun.Fire(laserSpawnPosition, Rotation - 90f);
     }
 }

@@ -1,4 +1,4 @@
-﻿using MVC.View.Player;
+﻿using MVC.View;
 
 namespace MVC.Logic.Player
 {
@@ -20,17 +20,24 @@ namespace MVC.Logic.Player
             _playerView.OnMoveRequest += ViewMoveRequest;
             _playerView.OnRotateRequest += ViewRotateRequest;
             _playerView.OnBulletFireRequest += ViewBulletFireRequest;
+            _playerView.OnLaserFireRequest += ViewLaserFireRequest;
             _playerView.OnDeltaTimeUpdate += ViewDeltaTimeUpdate;
             
             _playerModel.OnPositionChanged += ModelPositionChanged;
             _playerModel.OnRotationChanged += ModelRotationChanged;
         }
 
-        private void ViewDeltaTimeUpdate(float deltaTime) => 
+        private void ViewDeltaTimeUpdate(float deltaTime)
+        {
             _playerModel.DeltaTime = deltaTime;
+            _playerModel.OnUpdate?.Invoke();
+        }
 
         private void ViewBulletFireRequest() => 
-            _playerModel.Fire();
+            _playerModel.FireBulletGun();
+
+        private void ViewLaserFireRequest(UniVector2 laserSpawnPosition) => 
+            _playerModel.FireLaserGun(laserSpawnPosition);
 
         private void ViewMoveRequest() => 
             _playerModel.Move();

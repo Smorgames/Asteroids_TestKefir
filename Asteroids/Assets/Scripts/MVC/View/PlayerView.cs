@@ -1,16 +1,19 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MVC.View.Player
+namespace MVC.View
 {
     public class PlayerView : MonoBehaviour
     {
         private const string HorizontalAxis = "Horizontal";
 
+        public Action<float> OnDeltaTimeUpdate;
         public Action OnMoveRequest;
         public Action<float, UniVector2> OnRotateRequest;
         public Action OnBulletFireRequest;
-        public Action<float> OnDeltaTimeUpdate;
+        public Action<UniVector2> OnLaserFireRequest;
+
+        [SerializeField] private Transform _laserSpawnPoint;
 
         private void Update()
         {
@@ -24,8 +27,11 @@ namespace MVC.View.Player
             
             if (Input.GetKeyDown(KeyCode.J))
                 OnBulletFireRequest?.Invoke();
-        }
 
+            if (Input.GetKeyDown(KeyCode.L)) 
+                OnLaserFireRequest?.Invoke(_laserSpawnPoint.position.ToUniVector2());
+        }
+        
         public void SetPosition(UniVector2 position) =>
             transform.position = position.ToVector2();
 

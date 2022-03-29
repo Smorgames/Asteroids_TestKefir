@@ -1,12 +1,14 @@
-﻿namespace MVC.Logic
+﻿using System;
+
+namespace MVC.Logic
 {
     public class Counter
     {
-        public bool Reloaded { get => _reloaded; set => _reloaded = value; }
+        public Action OnReloaded;
         
-        private readonly float _reloadTime;
+        public bool Reloaded { get; set; } = true;
 
-        private bool _reloaded = true;
+        private readonly float _reloadTime;
         private float _counter;
 
         public Counter(float reloadTime) => 
@@ -14,15 +16,16 @@
         
         public void CounterTick(float deltaTime)
         {
-            if (_reloaded)
+            if (Reloaded)
                 return;
 
             _counter += deltaTime;
 
             if (ReloadingCompleted())
             {
-                _reloaded = true;
+                Reloaded = true;
                 _counter = 0f;
+                OnReloaded?.Invoke();
             }
         }
 

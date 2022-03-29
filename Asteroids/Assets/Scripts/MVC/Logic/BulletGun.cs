@@ -10,7 +10,7 @@ namespace MVC.Logic
         public BulletGun(PlayerModel playerModel) => 
             _playerModel = playerModel;
 
-        public void Fire(UniVector2 direction) => 
-            GameFactory.CreateBullet(_playerModel.Position, direction);
+        public void Fire() => 
+            GameFactory.CreateBullet(_playerModel.Position, _playerModel.Direction.Copy());
     }
 }
