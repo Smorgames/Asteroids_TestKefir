@@ -6,32 +6,35 @@ namespace MVC.Logic.Bullet
     {
         public Action OnPositionChanged;
         
-        private float _speed;
+        private readonly float _speed;
+        private readonly UniVector2 _direction;
+
         private UniVector2 _position;
 
-        public BulletModel(float speed) => 
+        public UniVector2 Position
+        {
+            get => _position;
+            set
+            {
+                if (Equals(value, _position))
+                    return;
+
+                _position = value;
+                OnPositionChanged?.Invoke();
+            }
+        }
+
+        public BulletModel(float speed, UniVector2 startPosition, UniVector2 moveDirection)
+        {
             _speed = speed;
-
-        public void Move(UniVector2 direction)
-        {
-            var newPosition = _position + direction * _speed;
-            SetPosition(newPosition);
+            _direction = moveDirection.Normalize();
+            Position = startPosition;
         }
 
-        private void SetPosition(UniVector2 position)
+        public void Move(float physicDeltaTime)
         {
-            if (Equals(position, _position))
-                return;
-
-            _position = position;
-            OnPositionChanged?.Invoke();
+            var newPosition = _position + _direction * _speed * physicDeltaTime;
+            Position = newPosition;
         }
-
-        public void SetPosition(float x, float y) => 
-            SetPosition(new UniVector2(x, y));
-
-        public UniVector2 GetPosition() => _position;
-
-        public float GetSpeed() => _speed;
     }
 }

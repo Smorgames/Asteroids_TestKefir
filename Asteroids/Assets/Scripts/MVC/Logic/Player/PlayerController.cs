@@ -18,28 +18,33 @@ namespace MVC.Logic.Player
         private void SubscribeOnEvents()
         {
             _playerView.OnMoveRequest += ViewMoveRequest;
-            _playerView.OnRotateRequest += ViewRotateTick;
+            _playerView.OnRotateRequest += ViewRotateRequest;
+            _playerView.OnBulletFireRequest += ViewBulletFireRequest;
+            _playerView.OnDeltaTimeUpdate += ViewDeltaTimeUpdate;
+            
             _playerModel.OnPositionChanged += ModelPositionChanged;
             _playerModel.OnRotationChanged += ModelRotationChanged;
         }
 
-        private void ViewMoveRequest(UniVector2 direction) => 
-            _playerModel.Move(direction);
+        private void ViewDeltaTimeUpdate(float deltaTime) => 
+            _playerModel.DeltaTime = deltaTime;
 
-        private void ModelPositionChanged()
-        {
-            var position = _playerModel.GetPosition().ToVector2();
-            _playerView.SetPosition(position);
-        }
+        private void ViewBulletFireRequest() => 
+            _playerModel.Fire();
 
-        private void ViewRotateTick(float horizontalAxis)
+        private void ViewMoveRequest() => 
+            _playerModel.Move();
+
+        private void ModelPositionChanged() => 
+            _playerView.SetPosition(_playerModel.Position);
+
+        private void ViewRotateRequest(float horizontalAxis, UniVector2 moveDirection)
         {
-            var delta = horizontalAxis * _playerModel.GetRotationSpeed();
-            var rotation = _playerModel.GetRotation() + delta;
-            _playerModel.SetRotation(rotation);
+            _playerModel.Rotate(horizontalAxis);
+            _playerModel.Direction = moveDirection;
         }
 
         private void ModelRotationChanged() => 
-            _playerView.SetRotation(_playerModel.GetRotation());
+            _playerView.SetRotation(_playerModel.Rotation);
     }
 }

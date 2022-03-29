@@ -18,13 +18,14 @@ namespace MVC.Logic.Bullet
         private void SubscribeOnEvents()
         {
             _bulletView.OnMoveRequest += ViewMoveRequest;
+            
             _bulletModel.OnPositionChanged += ModelPositionChanged;
         }
 
-        private void ViewMoveRequest(UniVector2 direction) => 
-            _bulletModel.Move(direction);
+        private void ViewMoveRequest(float physicDeltaTime) => 
+            _bulletModel.Move(physicDeltaTime);
 
         private void ModelPositionChanged() => 
-            _bulletView.SetPosition(_bulletModel.GetPosition());
+            _bulletView.SetPosition(_bulletModel.Position);
     }
 }

@@ -8,45 +8,63 @@ namespace MVC.Logic.Player
         
         public Action OnPositionChanged;
         public Action OnRotationChanged;
+        
+        public UniVector2 Position
+        {
+            get => _position;
+            set
+            {
+                if (Equals(value, _position))
+                    return;
 
+                _position = value;
+                OnPositionChanged?.Invoke();
+            }
+        }
+        public float Rotation
+        {
+            get => _rotation;
+            private set
+            {
+                if (Math.Abs(_rotation - value) < FloatThreshold)
+                    return;
+
+                _rotation = value;
+
+                OnRotationChanged?.Invoke();
+            }
+        }
+        public UniVector2 Direction { set => _direction = value; }
+        public float DeltaTime { set => _deltaTime = value; }
+
+        private readonly BulletGun _bulletGun;
         private UniVector2 _position;
+        private UniVector2 _direction;
         private float _rotation;
         private float _rotationSpeed = 150f;
         private float _speed = 2f;
-        private Gun _gun;
+        private float _deltaTime;
 
-        public void Move(UniVector2 direction)
+        public PlayerModel()
         {
-            var newPosition = _position + direction * _speed;
-            SetPosition(newPosition);
+            _direction = new UniVector2(0f, 1f);
+            _bulletGun = new BulletGun(this);
         }
 
-        private void SetPosition(UniVector2 position)
+        public void Move()
         {
-            if (Equals(position, _position))
-                return;
-
-            _position = position;
-            OnPositionChanged?.Invoke();
+            var newPosition = _position + _direction * _speed * _deltaTime;
+            Position = newPosition;
         }
-        
-        public void SetPosition(float x, float y) => 
-            SetPosition(new UniVector2(x, y));
-        
-        public UniVector2 GetPosition() => _position;
 
-        public void SetRotation(float rotation)
+        public void Rotate(float horizontalAxis)
         {
-            if (Math.Abs(_rotation - rotation) < FloatThreshold)
-                return;
-            
-            _rotation = rotation;
-            OnRotationChanged?.Invoke();
+            var delta = horizontalAxis * _rotationSpeed * _deltaTime;
+            var rotation = Rotation + delta;
+            Rotation = rotation;
         }
-        public float GetRotation() => _rotation;
-        
-        public float GetRotationSpeed() => _rotationSpeed;
-        
-        public float GetSpeed() => _speed;
+
+        public void Fire() => 
+            _bulletGun.Fire(_direction.Copy());
     }
 }
