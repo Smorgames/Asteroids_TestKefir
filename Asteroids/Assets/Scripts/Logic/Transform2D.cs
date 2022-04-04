@@ -7,7 +7,7 @@ namespace Logic
         public Action OnPositionChanged;
         public Action OnRotationChanged;
         
-        private const float FloatThreshold = 0.0001f;
+        private const float FloatThreshold = 0.1f;
 
         public UniVector2 Position
         {
@@ -30,7 +30,6 @@ namespace Logic
                     return;
 
                 _rotation = value;
-
                 OnRotationChanged?.Invoke();
             }
         }
@@ -41,5 +40,7 @@ namespace Logic
 
         public Transform2D(UniVector2 direction) => 
             Direction = direction;
+
+        public Transform2D() { }
     }
 }

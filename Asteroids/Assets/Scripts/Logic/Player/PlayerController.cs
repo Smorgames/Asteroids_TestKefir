@@ -4,6 +4,8 @@ namespace Logic.Player
 {
     public class PlayerController
     {
+        public PlayerModel Model => _playerModel;
+
         private readonly PlayerModel _playerModel;
         private readonly PlayerView _playerView;
 

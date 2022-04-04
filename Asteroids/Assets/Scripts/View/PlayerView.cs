@@ -1,4 +1,5 @@
 ﻿using System;
+using Logic;
 using UnityEngine;
 
 namespace View

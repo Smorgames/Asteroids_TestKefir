@@ -31,6 +31,9 @@ public class UniVector2
     public static UniVector2 operator +(UniVector2 first, UniVector2 second) =>
         new UniVector2(first.X + second.X, first.Y + second.Y);
     
+    public static UniVector2 operator -(UniVector2 first, UniVector2 second) =>
+        new UniVector2(first.X - second.X, first.Y - second.Y);
+    
 
     public override string ToString() => $"[{X}; {Y}]";
 }
