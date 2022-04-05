@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace DELETE
+namespace TEST
 {
     public class MoveInDirection : MonoBehaviour
     {

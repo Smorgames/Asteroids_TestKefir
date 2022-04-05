@@ -6,10 +6,10 @@ namespace Logic.Bullet
 
         private readonly float _speed;
 
-        public BulletModel(float speed, UniVector2 startPosition, UniVector2 moveDirection)
+        public BulletModel(in float speed, UniVector2 startPosition, UniVector2 moveDirection)
         {
             _speed = speed;
-            Transform = new Transform2D(moveDirection.Normalize()) { Position = startPosition };
+            Transform = new Transform2D { Position = startPosition, Direction = moveDirection.Normalize()};
         }
 
         public void Move(float physicDeltaTime)

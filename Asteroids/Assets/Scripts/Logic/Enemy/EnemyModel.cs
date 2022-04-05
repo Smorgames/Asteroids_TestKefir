@@ -6,11 +6,13 @@ namespace Logic.Enemy
     {
         public Transform2D Transform { get; }
 
-        private PlayerModel _playerModel;
+        private readonly PlayerModel _playerModel;
+        private readonly Game _game;
         private readonly float _speed;
         
-        public EnemyModel(float speed, UniVector2 startPosition, PlayerModel playerModel)
+        public EnemyModel(float speed, UniVector2 startPosition, PlayerModel playerModel, Game game)
         {
+            _game = game;
             _playerModel = playerModel;
             _speed = speed;
             Transform = new Transform2D() {Position = startPosition};
@@ -23,5 +25,7 @@ namespace Logic.Enemy
             Transform.Position = newPosition;
             Transform.OnPositionChanged?.Invoke();
         }
+
+        public void Dead() => _game.EnemyDead();
     }
 }

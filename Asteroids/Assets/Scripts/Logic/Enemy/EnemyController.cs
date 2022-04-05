@@ -4,31 +4,32 @@ namespace Logic.Enemy
 {
     public class EnemyController
     {
-        private readonly EnemyModel _enemyModel;
-        private readonly EnemyView _enemyView;
+        public EnemyView View { get; }
+
+        public EnemyModel Model { get; }
 
         public EnemyController(EnemyModel enemyModel, EnemyView enemyView)
         {
-            _enemyModel = enemyModel;
-            _enemyView = enemyView;
+            Model = enemyModel;
+            View = enemyView;
 
             SubscribeOnEvents();
         }
 
         private void SubscribeOnEvents()
         {
-            _enemyView.OnMoveRequest += ViewMoveRequest;
-            _enemyView.OnRotateRequest += ViewRotateRequest;
-            _enemyModel.Transform.OnPositionChanged += ModelPositionChanged;
+            View.OnMoveRequest += ViewMoveRequest;
+            View.OnRotateRequest += ViewRotateRequest;
+            Model.Transform.OnPositionChanged += ModelPositionChanged;
         }
 
         private void ViewMoveRequest(float deltaTime) => 
-            _enemyModel.Move(deltaTime);
+            Model.Move(deltaTime);
 
         private void ViewRotateRequest() => 
-            _enemyView.SetRotation(_enemyModel.Transform.Direction);
+            View.SetRotation(Model.Transform.Direction);
 
         private void ModelPositionChanged() => 
-            _enemyView.SetPosition(_enemyModel.Transform.Position);
+            View.SetPosition(Model.Transform.Position);
     }
 }

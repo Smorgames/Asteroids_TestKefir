@@ -1,11 +1,13 @@
 ﻿using System;
+using Logic;
 using UnityEngine;
 
 namespace View
 {
-    public class MeteorView : MonoBehaviour
+    public class MeteorView : MonoBehaviour, IDead
     {
         public Action<float> OnMoveRequest;
+        public Action OnDead;
 
         private Vector2 _direction;
 
@@ -14,5 +16,7 @@ namespace View
 
         public void SetPosition(UniVector2 position) => 
             transform.position = position.ToVector2();
+
+        public void Dead() => OnDead?.Invoke();
     }
 }

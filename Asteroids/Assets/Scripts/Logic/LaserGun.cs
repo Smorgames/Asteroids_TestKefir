@@ -7,13 +7,15 @@ namespace Logic
     {
         private readonly PlayerModel _playerModel;
         private readonly Counter _counter;
+        private readonly GameFactory _gameFactory;
         
         private int _maxFireAmount = 1;
         private int _currentFireAmount;
         
-        public LaserGun(float reloadTime, PlayerModel playerModel)
+        public LaserGun(float reloadTime, PlayerModel playerModel, GameFactory gameFactory)
         {
             _playerModel = playerModel;
+            _gameFactory = gameFactory;
             _currentFireAmount = _maxFireAmount;
             _counter = new Counter(reloadTime);
             _playerModel.OnUpdate += Update;
@@ -37,7 +39,7 @@ namespace Logic
             if (_currentFireAmount <= 0)
                 return;
             
-            GameFactory.CreateLaser(laserSpawnPosition, rotation);
+            _gameFactory.CreateLaser(laserSpawnPosition, rotation);
             _currentFireAmount--;
             _counter.Reloaded = false;
         }

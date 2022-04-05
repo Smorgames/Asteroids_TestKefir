@@ -33,7 +33,8 @@ namespace Logic
                 OnRotationChanged?.Invoke();
             }
         }
-        public UniVector2 Direction { get; set; }
+
+        public UniVector2 Direction { get; set; } = new UniVector2(0f, 0f);
 
         private UniVector2 _position;
         private float _rotation;
@@ -41,6 +42,16 @@ namespace Logic
         public Transform2D(UniVector2 direction) => 
             Direction = direction;
 
-        public Transform2D() { }
+        public Transform2D(UniVector2 startPosition, UniVector2 direction)
+        {
+            Position = startPosition;
+            Direction = direction;
+        }
+
+        public Transform2D()
+        {
+            
+        }
+
     }
 }
