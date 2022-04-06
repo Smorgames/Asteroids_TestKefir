@@ -1,27 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using DataStructers;
+using ExtensionsDirectory;
+using Logic;
+using Tags;
 using UnityEngine;
 
 namespace View
 {
     public class LaserView : MonoBehaviour
     {
-        private readonly WaitForSeconds _waitBeforeDestroyObject = new WaitForSeconds(0.25f);
+        private const float ZeroAngle = 0f;
+        private readonly WaitForSeconds _waitBeforeDestroy = new WaitForSeconds(0.25f);
         
-        private void Start() => 
-            StartCoroutine(DestroyCoroutine());
+        public Action OnDead;
 
         private void OnTriggerEnter2D(Collider2D col)
         {
             var enemy = col.GetComponent<EnemyTag>();
 
-            if (enemy != null)
-                Destroy(enemy.gameObject);
+            if (enemy != null) 
+                enemy.GetComponent<IMortal>().Dead();
         }
 
-        private IEnumerator DestroyCoroutine()
+        public void SetPosition(UniVector2 position) => 
+            transform.position = position.ToVector2();
+
+        public void SetRotation(float angle) =>
+            transform.rotation = Quaternion.Euler(ZeroAngle, ZeroAngle, angle);
+
+        public void DestroyOnTimer() => 
+            StartCoroutine(DestroyOnTimerCoroutine());
+
+        private IEnumerator DestroyOnTimerCoroutine()
         {
-            yield return _waitBeforeDestroyObject;
-            Destroy(gameObject);
+            yield return _waitBeforeDestroy;
+            OnDead?.Invoke();
         }
     }
 }

@@ -1,12 +1,16 @@
 ﻿using System;
+using DataStructers;
+using ExtensionsDirectory;
+using Logic;
 using UnityEngine;
 
 namespace View
 {
-    public class EnemyView : MonoBehaviour
+    public class EnemyView : MonoBehaviour, IMortal
     {
         public Action<float> OnMoveRequest;
         public Action OnRotateRequest;
+        public Action OnDead;
 
         private void Update()
         {
@@ -25,5 +29,7 @@ namespace View
             
             transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
+
+        public void Dead() => OnDead?.Invoke();
     }
 }

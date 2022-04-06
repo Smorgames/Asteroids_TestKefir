@@ -1,33 +1,43 @@
-﻿using View;
+﻿using Services;
+using View;
 
 namespace Logic.Meteor
 {
     public class MeteorController
     {
-        private readonly MeteorModel _meteorModel;
-        private readonly MeteorView _meteorView;
+        public MeteorView View { get; }
+        public MeteorModel Model { get; }
 
-        public MeteorController(MeteorModel meteorModel, MeteorView meteorView)
+        private readonly Game _game;
+
+        public MeteorController(MeteorModel meteorModel, MeteorView meteorView, Game game)
         {
-            _meteorModel = meteorModel;
-            _meteorView = meteorView;
+            Model = meteorModel;
+            View = meteorView;
+
+            _game = game;
 
             SubscribeOnEvents();
         }
 
         private void SubscribeOnEvents()
         {
-            _meteorView.OnMoveRequest += ViewMoveRequest;
-            _meteorView.OnDead += ViewDead;
-            _meteorModel.Transform.OnPositionChanged += ModelPositionChanged;
+            View.OnMoveRequest += ViewMoveRequest;
+            View.OnDead += ViewDead;
+            Model.Transform.OnPositionChanged += ModelPositionChanged;
         }
 
-        private void ViewDead() => _meteorModel.Dead();
+        private void ViewDead()
+        {
+            Model.Dead();
+            Model.Pool.Destroy(this, Model.Type);
+            _game.MeteorDead();
+        }
 
         private void ViewMoveRequest(float deltaTime) => 
-            _meteorModel.Move(deltaTime);
+            Model.Move(deltaTime);
 
         private void ModelPositionChanged() => 
-            _meteorView.SetPosition(_meteorModel.Transform.Position);
+            View.SetPosition(Model.Transform.Position);
     }
 }

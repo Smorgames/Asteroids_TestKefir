@@ -1,23 +1,29 @@
-﻿using Services;
+﻿using DataStructers;
+using Enums;
+using Logic.Pools;
+using Services;
 
 namespace Logic.Meteor
 {
-    public class MeteorModel
+    public class MeteorModel : IScore
     {
+        private const int SmallMeteorAmount = 2;
+        
         public Transform2D Transform { get; }
+        public MeteorType Type { get; }
+        public MeteorPool Pool { get; }
 
-        private readonly GameFactory _gameFactory;
         private readonly float _speed;
         private readonly Teleport _teleport;
-        private readonly int _smallMeteorAmount = 3;
-        private readonly MeteorType _type;
+        private readonly int _scorePoint;
 
-        public MeteorModel(float speed, UniVector2 startPosition, UniVector2 moveDirection, MeteorType type,
-            GameFactory gameFactory)
+        public MeteorModel(float speed, UniVector2 startPosition, 
+            UniVector2 moveDirection, MeteorType type, MeteorPool meteorPool, int scorePoint)
         {
-            _gameFactory = gameFactory;
+            Pool = meteorPool;
+            _scorePoint = scorePoint;
             _speed = speed;
-            _type = type;
+            Type = type;
             Transform = new Transform2D(moveDirection.Normalize()) { Position = startPosition };
             _teleport = new Teleport(9.05f, 5.15f, Transform);
         }
@@ -32,14 +38,16 @@ namespace Logic.Meteor
 
         public void Dead()
         {
-            if (_type == MeteorType.Small)
+            if (Type == MeteorType.Small)
                 return;
             
-            for (var i = 0; i < _smallMeteorAmount; i++)
+            for (var i = 0; i < SmallMeteorAmount; i++)
             {
                 var randomDirection = new UniVector2(Randomizer.Random(-1f, 1f), Randomizer.Random(-1f, 1f)).Normalize();
-                _gameFactory.CreateSmallMeteor(_speed * 1.5f, Transform.Position, randomDirection);
+                Pool.Instantiate(Transform.Position, randomDirection, MeteorType.Small);
             }
         }
+
+        public int GetScorePoint() => _scorePoint;
     }
 }

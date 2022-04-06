@@ -7,28 +7,27 @@ namespace Logic
         public Action OnReloaded;
         
         public bool Reloaded { get; set; } = true;
-
-        private readonly float _reloadTime;
-        private float _counter;
+        public float CurrentReloadTime { get; private set; }
+        public float ReloadTime { get; }
 
         public Counter(float reloadTime) => 
-            _reloadTime = reloadTime;
+            ReloadTime = reloadTime;
         
         public void CounterTick(float deltaTime)
         {
             if (Reloaded)
                 return;
 
-            _counter += deltaTime;
+            CurrentReloadTime += deltaTime;
 
             if (ReloadingCompleted())
             {
                 Reloaded = true;
-                _counter = 0f;
+                CurrentReloadTime = 0f;
                 OnReloaded?.Invoke();
             }
         }
 
-        private bool ReloadingCompleted() => _counter >= _reloadTime;
+        private bool ReloadingCompleted() => CurrentReloadTime >= ReloadTime;
     }
 }

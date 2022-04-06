@@ -1,10 +1,12 @@
 ﻿using System;
+using DataStructers;
+using ExtensionsDirectory;
 using Logic;
 using UnityEngine;
 
 namespace View
 {
-    public class MeteorView : MonoBehaviour, IDead
+    public class MeteorView : MonoBehaviour, IMortal
     {
         public Action<float> OnMoveRequest;
         public Action OnDead;

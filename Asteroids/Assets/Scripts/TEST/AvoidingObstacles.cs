@@ -1,5 +1,5 @@
+using Tags;
 using UnityEngine;
-using View;
 
 namespace TEST
 {

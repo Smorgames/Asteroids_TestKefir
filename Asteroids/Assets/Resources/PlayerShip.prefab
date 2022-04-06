@@ -160,6 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _laserSpawnPoint: {fileID: 291699594}
+  _mark: {fileID: 2110309349910348686, guid: 87b61c2382118e04c9e6a398c8ec0021, type: 3}
 --- !u!61 &7130712459809987022
 BoxCollider2D:
   m_ObjectHideFlags: 0

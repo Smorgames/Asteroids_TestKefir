@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using DataStructers;
+using ExtensionsDirectory;
 using Logic;
+using Tags;
 using UnityEngine;
 
 namespace View
@@ -23,8 +26,7 @@ namespace View
 
             if (enemy != null)
             {
-                enemy.GetComponent<IDead>()?.Dead();
-                Destroy(enemy.gameObject);
+                enemy.GetComponent<IMortal>()?.Dead();
                 OnDead?.Invoke();
             }
         }

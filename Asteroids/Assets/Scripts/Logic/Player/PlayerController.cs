@@ -1,4 +1,5 @@
-﻿using View;
+﻿using DataStructers;
+using View;
 
 namespace Logic.Player
 {
@@ -19,7 +20,8 @@ namespace Logic.Player
 
         private void SubscribeOnEvents()
         {
-            _playerView.OnMoveRequest += ViewMoveRequest;
+            _playerView.OnAccelerateRequest += ViewAccelerateRequest;
+            _playerView.OnSlowdownRequest += ViewSlowdownRequest;
             _playerView.OnRotateRequest += ViewRotateRequest;
             _playerView.OnBulletFireRequest += ViewBulletFireRequest;
             _playerView.OnLaserFireRequest += ViewLaserFireRequest;
@@ -28,9 +30,11 @@ namespace Logic.Player
             _playerModel.Transform.OnPositionChanged += ModelPositionChanged;
             _playerModel.Transform.OnRotationChanged += ModelRotationChanged;
         }
-        
-        private void ViewMoveRequest() => _playerModel.Move();
-        
+
+        private void ViewAccelerateRequest() => _playerModel.Accelerate();
+
+        private void ViewSlowdownRequest() => _playerModel.Slowdown();
+
         private void ViewRotateRequest(float horizontalAxis, UniVector2 moveDirection)
         {
             _playerModel.Rotate(horizontalAxis);

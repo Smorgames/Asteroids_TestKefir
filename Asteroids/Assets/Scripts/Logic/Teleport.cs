@@ -1,4 +1,6 @@
-﻿namespace Logic
+﻿using DataStructers;
+
+namespace Logic
 {
     public class Teleport
     {

@@ -1,3 +1,5 @@
+using DataStructers;
+
 namespace Logic.Bullet
 {
     public class BulletModel

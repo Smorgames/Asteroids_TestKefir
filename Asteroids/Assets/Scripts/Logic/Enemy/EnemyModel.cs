@@ -1,21 +1,22 @@
-﻿using Logic.Player;
+﻿using DataStructers;
+using Logic.Player;
 
 namespace Logic.Enemy
 {
-    public class EnemyModel
+    public class EnemyModel : IScore
     {
         public Transform2D Transform { get; }
 
         private readonly PlayerModel _playerModel;
-        private readonly Game _game;
         private readonly float _speed;
+        private readonly int _scorePoint;
         
-        public EnemyModel(float speed, UniVector2 startPosition, PlayerModel playerModel, Game game)
+        public EnemyModel(float speed, UniVector2 startPosition, PlayerModel playerModel, int scorePoint)
         {
-            _game = game;
             _playerModel = playerModel;
             _speed = speed;
-            Transform = new Transform2D() {Position = startPosition};
+            _scorePoint = scorePoint;
+            Transform = new Transform2D {Position = startPosition};
         }
 
         public void Move(float deltaTime)
@@ -26,6 +27,6 @@ namespace Logic.Enemy
             Transform.OnPositionChanged?.Invoke();
         }
 
-        public void Dead() => _game.EnemyDead();
+        public int GetScorePoint() => _scorePoint;
     }
 }

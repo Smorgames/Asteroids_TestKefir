@@ -1,18 +1,24 @@
-﻿using View;
+﻿using Logic.Pools;
+using Services;
+using View;
 
 namespace Logic.Enemy
 {
     public class EnemyController
     {
         public EnemyView View { get; }
-
         public EnemyModel Model { get; }
 
-        public EnemyController(EnemyModel enemyModel, EnemyView enemyView)
+        private readonly EnemyPool _enemyPool;
+        private readonly Game _game;
+
+        public EnemyController(EnemyModel enemyModel, EnemyView enemyView, EnemyPool enemyPool, Game game)
         {
             Model = enemyModel;
             View = enemyView;
-
+            _enemyPool = enemyPool;
+            _game = game;
+            
             SubscribeOnEvents();
         }
 
@@ -20,6 +26,7 @@ namespace Logic.Enemy
         {
             View.OnMoveRequest += ViewMoveRequest;
             View.OnRotateRequest += ViewRotateRequest;
+            View.OnDead += ViewDead;
             Model.Transform.OnPositionChanged += ModelPositionChanged;
         }
 
@@ -28,6 +35,12 @@ namespace Logic.Enemy
 
         private void ViewRotateRequest() => 
             View.SetRotation(Model.Transform.Direction);
+
+        private void ViewDead()
+        {
+            _enemyPool.Destroy(this);
+            _game.EnemyDead();
+        }
 
         private void ModelPositionChanged() => 
             View.SetPosition(Model.Transform.Position);

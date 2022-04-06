@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DataStructers;
 using Logic.Bullet;
 using Services;
 
@@ -11,11 +12,11 @@ namespace Logic.Pools
 
         private readonly Queue<BulletController> _pool;
 
-        public BulletPool(int poolCapacity, GameFactory gameFactory, Game game)
+        public BulletPool(int poolCapacity, GameFactory gameFactory)
         {
             _pool = new Queue<BulletController>(poolCapacity);
             var empty = gameFactory.CreateEmpty(ContainerName);
-            
+
             for (var i = 0; i < poolCapacity; i++)
             {
                 var bulletController = gameFactory.CreateBullet(_spawnPosition, new UniVector2(), this);
@@ -27,7 +28,7 @@ namespace Logic.Pools
 
         public void Instantiate(UniVector2 startPosition, UniVector2 moveDirection)
         {
-            if (_pool.Count == 0) 
+            if (_pool.Count == 0)
                 return;
 
             var bulletController = _pool.Dequeue();
@@ -41,7 +42,7 @@ namespace Logic.Pools
         {
             if (bulletController == null)
                 return;
-            
+
             _pool.Enqueue(bulletController);
             bulletController.View.gameObject.SetActive(false);
         }
