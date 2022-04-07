@@ -1,3 +1,4 @@
+using Data;
 using DataContainers;
 
 namespace Logic.Bullet
@@ -6,17 +7,17 @@ namespace Logic.Bullet
     {
         public Transform2D Transform { get; }
 
-        private readonly float _speed;
-
-        public BulletModel(in float speed, UniVector2 startPosition, UniVector2 moveDirection)
+        private readonly BulletData _bulletData;
+        
+        public BulletModel(BulletData data)
         {
-            _speed = speed;
-            Transform = new Transform2D { Position = startPosition, Direction = moveDirection.Normalize()};
+            _bulletData = data;
+            Transform = new Transform2D { Position = _bulletData.StartPosition, Direction = _bulletData.StartDirection.Normalize()};
         }
 
         public void Move(float physicDeltaTime)
         {
-            var newPosition = Transform.Position + Transform.Direction * _speed * physicDeltaTime;
+            var newPosition = Transform.Position + Transform.Direction * _bulletData.Speed * physicDeltaTime;
             Transform.Position = newPosition;
             Transform.OnPositionChanged?.Invoke();
         }

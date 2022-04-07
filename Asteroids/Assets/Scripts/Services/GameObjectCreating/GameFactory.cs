@@ -22,9 +22,7 @@ namespace Services.GameObjectCreating
         private const string BulletPath = "Bullet";
         private const string LaserPath = "Laser";
         private const string EnemyPath = "Enemy";
-
-        private const float BulletSpeed = 10f;
-
+        
         private readonly AssetProvider _assetProvider;
 
         public GameFactory(AssetProvider assetProvider)
@@ -41,11 +39,11 @@ namespace Services.GameObjectCreating
             return controller;
         }
 
-        public BulletController CreateBullet(UniVector2 startPosition, UniVector2 moveDirection, BulletPool bulletPool)
+        public BulletController CreateBullet(BulletData data, BulletPool bulletPool)
         {
-            var model = new BulletModel(BulletSpeed, startPosition, moveDirection);
+            var model = new BulletModel(data);
             var bulletPref = _assetProvider.LoadAsset<BulletView>(BulletPath);
-            var view = Object.Instantiate(bulletPref, startPosition.ToVector2(), Quaternion.identity);
+            var view = Object.Instantiate(bulletPref, data.StartPosition.ToVector2(), Quaternion.identity);
             var controller = new BulletController(model, view, bulletPool);
             return controller;
         }

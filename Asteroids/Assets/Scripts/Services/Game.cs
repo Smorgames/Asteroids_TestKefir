@@ -16,10 +16,9 @@ namespace Services
     public class Game
     {
         private const int EnemyAmount = 3;
-        private const int MaxLaserAmount = 4;
         private const int NormalMeteorAmount = 2;
         private const int SmallMeteorAmount = 10;
-        private const int BulletAmount = 20;
+        private const int BulletAmount = 30;
         private const float NormalMeteorSpeed = 3f;
         private const float SmallMeteorSpeed = 4.5f;
         private const float EnemySpeed = 1f;
@@ -52,9 +51,14 @@ namespace Services
             var canvasComponents = _factoryForUI.CreateMainCanvas(camera);
             
             _gameFactory = new GameFactory(_assetProvider);
-            _bulletPool = new BulletPool(BulletAmount, _gameFactory);
-            _laserPool = new LaserPool(MaxLaserAmount, _gameFactory);
-            var playerData = new PlayerData()
+            var bulletData = new BulletData
+            {
+                Speed = 10f,
+                StartDirection = new UniVector2()
+            };
+            _bulletPool = new BulletPool(BulletAmount, _gameFactory, bulletData);
+
+            var playerData = new PlayerData
             {
                 Speed = 2f,
                 RotationSpeed = 150f,
@@ -67,6 +71,7 @@ namespace Services
                 StartDirection = new UniVector2(0f, 1f),
                 TeleportLimits = new UniVector2(9.05f, 5.15f)
             };
+            _laserPool = new LaserPool(playerData.MaxLaserAmount, _gameFactory);
             _playerController = 
                 _gameFactory.CreatePlayer(playerData, _bulletPool, _laserPool, this);
 
@@ -81,14 +86,14 @@ namespace Services
             _enemyPool = 
                 new EnemyPool(enemyData, EnemyAmount, _gameFactory, this, _playerController);
 
-            var smallMeteorData = new MeteorData()
+            var smallMeteorData = new MeteorData
             {
                 ScorePoint = SmallMeteorScorePoint,
                 Speed = SmallMeteorSpeed,
                 Type = MeteorType.Small,
                 TeleportLimit = new UniVector2(9.05f, 5.15f)
             };
-            var normalMeteorData = new MeteorData()
+            var normalMeteorData = new MeteorData
             {
                 ScorePoint = NormalMeteorScorePoint,
                 Speed = NormalMeteorSpeed,
