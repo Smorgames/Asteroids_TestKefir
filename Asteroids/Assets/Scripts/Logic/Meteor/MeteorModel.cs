@@ -1,7 +1,9 @@
-﻿using DataStructers;
+﻿using Data;
+using DataContainers;
 using Enums;
 using Logic.Pools;
 using Services;
+using Services.Randomizing;
 
 namespace Logic.Meteor
 {
@@ -13,24 +15,23 @@ namespace Logic.Meteor
         public MeteorType Type { get; }
         public MeteorPool Pool { get; }
 
-        private readonly float _speed;
         private readonly Teleport _teleport;
-        private readonly int _scorePoint;
+        private readonly MeteorData _meteorData;
+        private Randomizer _randomizer;
 
-        public MeteorModel(float speed, UniVector2 startPosition, 
-            UniVector2 moveDirection, MeteorType type, MeteorPool meteorPool, int scorePoint)
+        public MeteorModel(MeteorData data, MeteorPool meteorPool, Randomizer randomizer)
         {
+            _meteorData = data;
+            _randomizer = randomizer;
             Pool = meteorPool;
-            _scorePoint = scorePoint;
-            _speed = speed;
-            Type = type;
-            Transform = new Transform2D(moveDirection.Normalize()) { Position = startPosition };
-            _teleport = new Teleport(9.05f, 5.15f, Transform);
+            Type = data.Type;
+            Transform = new Transform2D { Position = data.StartPosition };
+            _teleport = new Teleport(data.TeleportLimit.X, data.TeleportLimit.Y, Transform);
         }
 
         public void Move(float deltaTime)
         {
-            var newPosition = Transform.Position + Transform.Direction * _speed * deltaTime;
+            var newPosition = Transform.Position + Transform.Direction * _meteorData.Speed * deltaTime;
             Transform.Position = newPosition;
             Transform.OnPositionChanged?.Invoke();
             _teleport.TryTeleport();
@@ -43,11 +44,11 @@ namespace Logic.Meteor
             
             for (var i = 0; i < SmallMeteorAmount; i++)
             {
-                var randomDirection = new UniVector2(Randomizer.Random(-1f, 1f), Randomizer.Random(-1f, 1f)).Normalize();
+                var randomDirection = new UniVector2(_randomizer.Random(-1f, 1f), _randomizer.Random(-1f, 1f)).Normalize();
                 Pool.Instantiate(Transform.Position, randomDirection, MeteorType.Small);
             }
         }
 
-        public int GetScorePoint() => _scorePoint;
+        public int GetScorePoint() => _meteorData.ScorePoint;
     }
 }

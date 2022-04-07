@@ -1,4 +1,5 @@
-﻿using DataStructers;
+﻿using Data;
+using DataContainers;
 using Logic.Player;
 
 namespace Logic.Enemy
@@ -11,12 +12,12 @@ namespace Logic.Enemy
         private readonly float _speed;
         private readonly int _scorePoint;
         
-        public EnemyModel(float speed, UniVector2 startPosition, PlayerModel playerModel, int scorePoint)
+        public EnemyModel(EnemyData data, PlayerModel playerModel)
         {
             _playerModel = playerModel;
-            _speed = speed;
-            _scorePoint = scorePoint;
-            Transform = new Transform2D {Position = startPosition};
+            _speed = data.Speed;
+            _scorePoint = data.ScorePoint;
+            Transform = new Transform2D {Position = data.StartPosition};
         }
 
         public void Move(float deltaTime)

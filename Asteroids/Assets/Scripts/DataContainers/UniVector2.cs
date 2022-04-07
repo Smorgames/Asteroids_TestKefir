@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DataStructers
+namespace DataContainers
 {
     [System.Serializable]
     public class UniVector2

@@ -1,7 +1,9 @@
-using DataStructers;
+using DataContainers;
 using Enums;
 using Logic.Pools;
 using Services;
+using Services.GameObjectCreating;
+using Services.Randomizing;
 
 namespace Logic
 {
@@ -13,11 +15,13 @@ namespace Logic
         private readonly GameFactory _gameFactory;
         private readonly EnemyPool _enemyPool;
         private readonly MeteorPool _meteorPool;
+        private readonly Randomizer _randomizer;
         
-        public HazardSpawner(MeteorPool meteorPool, EnemyPool enemyPool)
+        public HazardSpawner(MeteorPool meteorPool, EnemyPool enemyPool, Randomizer randomizer)
         {
             _meteorPool = meteorPool;
             _enemyPool = enemyPool;
+            _randomizer = randomizer;
         }
 
         public void SpawnEnemy()
@@ -35,20 +39,20 @@ namespace Logic
 
         private UniVector2 GetRandomSpawnPosition()
         {
-            var spawnHorizontally = Randomizer.Random(0f, 1f) > 0.5f;
-            var multiplayer = Randomizer.Random(0f, 1f) > 0.5f ? 1 : -1;
+            var spawnHorizontally = _randomizer.Random(0f, 1f) > 0.5f;
+            var multiplayer = _randomizer.Random(0f, 1f) > 0.5f ? 1 : -1;
 
             float x, y;
 
             if (spawnHorizontally)
             {
-                x = Randomizer.Random(-XLimit, XLimit);
+                x = _randomizer.Random(-XLimit, XLimit);
                 y = multiplayer * YLimit;
             }
             else
             {
                 x = multiplayer * XLimit;
-                y = Randomizer.Random(-YLimit, YLimit);
+                y = _randomizer.Random(-YLimit, YLimit);
             }
 
             return new UniVector2(x, y);
@@ -56,8 +60,8 @@ namespace Logic
 
         private UniVector2 GetRandomMoveDirection()
         {
-            var x = Randomizer.Random(-1f, 1f);
-            var y = Randomizer.Random(-1f, 1f);
+            var x = _randomizer.Random(-1f, 1f);
+            var y = _randomizer.Random(-1f, 1f);
 
             return new UniVector2(x, y).Normalize();
         }

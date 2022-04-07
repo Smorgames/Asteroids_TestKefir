@@ -29,10 +29,7 @@ namespace Logic
             TimeToCooldownChanged();
         }
 
-        private void Update()
-        {
-            SetPlayerInstantSpeed();
-        }
+        private void Update() => SetPlayerInstantSpeed();
 
         private void PlayerPositionChanged()
         {

@@ -39,7 +39,7 @@ namespace Logic.Enemy
         private void ViewDead()
         {
             _enemyPool.Destroy(this);
-            _game.EnemyDead();
+            _game.EnemyDead(Model);
         }
 
         private void ModelPositionChanged() => 

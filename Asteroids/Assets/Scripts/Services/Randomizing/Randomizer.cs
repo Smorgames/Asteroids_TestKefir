@@ -1,8 +1,8 @@
-﻿namespace Services
+﻿namespace Services.Randomizing
 {
     public class Randomizer
     {
-        public static float Random(float min, float max) => 
+        public float Random(float min, float max) => 
             UnityEngine.Random.Range(min, max);
     }
 }

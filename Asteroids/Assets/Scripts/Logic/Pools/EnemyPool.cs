@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
-using DataStructers;
+using Data;
+using DataContainers;
 using Logic.Enemy;
 using Logic.Player;
 using Services;
+using Services.GameObjectCreating;
 
 namespace Logic.Pools
 {
@@ -13,15 +15,15 @@ namespace Logic.Pools
 
         private readonly Queue<EnemyController> _pool;
 
-        public EnemyPool(float speed, int poolCapacity, GameFactory gameFactory, Game game,
-            PlayerController playerController, int scorePoint)
+        public EnemyPool(EnemyData data, int poolCapacity, GameFactory gameFactory, Game game, PlayerController playerController)
         {
             _pool = new Queue<EnemyController>(poolCapacity);
             var container = gameFactory.CreateEmpty(ContainerName);
             
             for (var i = 0; i < poolCapacity; i++)
             {
-                var enemyController = gameFactory.CreateEnemy(speed, _spawnPosition, playerController.Model, this, game, scorePoint);
+                var enemyController = 
+                    gameFactory.CreateEnemy(data, _spawnPosition, playerController.Model, this, game);
                 enemyController.View.gameObject.transform.parent = container.transform;
                 enemyController.View.gameObject.SetActive(false);
                 _pool.Enqueue(enemyController);

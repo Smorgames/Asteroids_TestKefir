@@ -1,5 +1,6 @@
 using System;
-using DataStructers;
+using Data;
+using DataContainers;
 using Logic.Guns;
 using Logic.Pools;
 
@@ -7,6 +8,8 @@ namespace Logic.Player
 {
     public class PlayerModel
     {
+        private const float LaserRotationOffset = 90f;
+        
         public Action OnUpdate;
 
         public float DeltaTime { get; set; }
@@ -15,29 +18,26 @@ namespace Logic.Player
 
         private readonly BulletGun _bulletGun;
         private readonly Teleport _teleport;
-        private UniVector2 _acceleration = new UniVector2();
-        private float _rotationSpeed = 150f;
-        private float _speed = 2f;
+        private readonly PlayerData _playerData;
+        private UniVector2 _acceleration;
 
-        private float _slowdownTime = 1f;
-        private float _accelerationTime = 1f;
-        private float _accelerationLimit = 1f;
-
-        public PlayerModel(UniVector2 startPosition, BulletPool bulletPool, LaserPool laserPool, int maxLaserAmount)
+        public PlayerModel(PlayerData data, BulletPool bulletPool, LaserPool laserPool)
         {
-            Transform = new Transform2D(startPosition, new UniVector2(0f, 1f));
+            _playerData = data;
+            _acceleration = new UniVector2();
+            Transform = new Transform2D(data.StartPosition, data.StartDirection);
             _bulletGun = new BulletGun(this, bulletPool);
-            LaserGun = new LaserGun(2f, this, laserPool, maxLaserAmount);
-            _teleport = new Teleport(9.05f, 5.15f, Transform);
+            LaserGun = new LaserGun(data.LaserReload, this, laserPool, data.MaxLaserAmount);
+            _teleport = new Teleport(data.TeleportLimits.X, data.TeleportLimits.Y, Transform);
         }
 
 
         public void Accelerate()
         {
-            _acceleration += Transform.Direction * (_accelerationTime * DeltaTime);
+            _acceleration += Transform.Direction * (_playerData.AccelerationTime * DeltaTime);
             
-            _acceleration = _acceleration.Magnitude >= _accelerationLimit
-                ? _acceleration.Normalize() * _accelerationLimit
+            _acceleration = _acceleration.Magnitude >= _playerData.AccelerationLimit
+                ? _acceleration.Normalize() * _playerData.AccelerationLimit
                 : _acceleration;
             
             Move();
@@ -45,7 +45,7 @@ namespace Logic.Player
 
         public void Slowdown()
         {
-            _acceleration -= _acceleration * (DeltaTime / _slowdownTime);
+            _acceleration -= _acceleration * (DeltaTime / _playerData.SlowdownTime);
             _acceleration = _acceleration.Magnitude < 0 ? _acceleration = new UniVector2() : _acceleration;
             
             Move();
@@ -53,7 +53,7 @@ namespace Logic.Player
 
         public void Rotate(float horizontalAxis)
         {
-            var delta = horizontalAxis * _rotationSpeed * DeltaTime;
+            var delta = horizontalAxis * _playerData.RotationSpeed * DeltaTime;
             var rotation = Transform.Rotation + delta;
             Transform.Rotation = rotation;
         }
@@ -62,9 +62,9 @@ namespace Logic.Player
             _bulletGun.Fire();
 
         public void FireLaserGun(UniVector2 laserSpawnPosition) => 
-            LaserGun.Fire(laserSpawnPosition, Transform.Rotation - 90f);
+            LaserGun.Fire(laserSpawnPosition, Transform.Rotation - LaserRotationOffset);
 
-        public UniVector2 GetInstantSpeed() => _acceleration * _speed;
+        public UniVector2 GetInstantSpeed() => _acceleration * _playerData.Speed;
 
         public int GetMaxLaserAmount() => LaserGun.MaxLaserAmount;
         
@@ -72,7 +72,7 @@ namespace Logic.Player
 
         private void Move()
         {
-            var newPosition = Transform.Position + _acceleration * _speed * DeltaTime;
+            var newPosition = Transform.Position + _acceleration * _playerData.Speed * DeltaTime;
             Transform.Position = newPosition;
             _teleport.TryTeleport();
         }

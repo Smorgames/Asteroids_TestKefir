@@ -1,61 +1,66 @@
-﻿using DataStructers;
+﻿using DataContainers;
+using Services;
 using View;
 
 namespace Logic.Player
 {
     public class PlayerController
     {
-        public PlayerModel Model => _playerModel;
+        public PlayerModel Model { get; }
+        private PlayerView View { get; }
 
-        private readonly PlayerModel _playerModel;
-        private readonly PlayerView _playerView;
+        private readonly Game _game;
 
-        public PlayerController(PlayerModel playerModel, PlayerView playerView)
+        public PlayerController(PlayerModel playerModel, PlayerView playerView, Game game)
         {
-            _playerModel = playerModel;
-            _playerView = playerView;
+            Model = playerModel;
+            View = playerView;
+            _game = game;
             
             SubscribeOnEvents();
         }
 
         private void SubscribeOnEvents()
         {
-            _playerView.OnAccelerateRequest += ViewAccelerateRequest;
-            _playerView.OnSlowdownRequest += ViewSlowdownRequest;
-            _playerView.OnRotateRequest += ViewRotateRequest;
-            _playerView.OnBulletFireRequest += ViewBulletFireRequest;
-            _playerView.OnLaserFireRequest += ViewLaserFireRequest;
-            _playerView.OnDeltaTimeUpdate += ViewDeltaTimeUpdate;
+            View.OnAccelerateRequest += ViewAccelerateRequest;
+            View.OnSlowdownRequest += ViewSlowdownRequest;
+            View.OnRotateRequest += ViewRotateRequest;
+            View.OnBulletFireRequest += ViewBulletFireRequest;
+            View.OnLaserFireRequest += ViewLaserFireRequest;
+            View.OnDeltaTimeUpdate += ViewDeltaTimeUpdate;
+            View.OnDead += ViewDead;
             
-            _playerModel.Transform.OnPositionChanged += ModelPositionChanged;
-            _playerModel.Transform.OnRotationChanged += ModelRotationChanged;
+            Model.Transform.OnPositionChanged += ModelPositionChanged;
+            Model.Transform.OnRotationChanged += ModelRotationChanged;
         }
 
-        private void ViewAccelerateRequest() => _playerModel.Accelerate();
+        private void ViewAccelerateRequest() => Model.Accelerate();
 
-        private void ViewSlowdownRequest() => _playerModel.Slowdown();
+        private void ViewSlowdownRequest() => Model.Slowdown();
 
         private void ViewRotateRequest(float horizontalAxis, UniVector2 moveDirection)
         {
-            _playerModel.Rotate(horizontalAxis);
-            _playerModel.Transform.Direction = moveDirection;
+            Model.Rotate(horizontalAxis);
+            Model.Transform.Direction = moveDirection;
         }
         
-        private void ViewBulletFireRequest() => _playerModel.FireBulletGun();
+        private void ViewBulletFireRequest() => Model.FireBulletGun();
         
         private void ViewLaserFireRequest(UniVector2 laserSpawnPosition) => 
-            _playerModel.FireLaserGun(laserSpawnPosition);
+            Model.FireLaserGun(laserSpawnPosition);
         
         private void ViewDeltaTimeUpdate(float deltaTime)
         {
-            _playerModel.DeltaTime = deltaTime;
-            _playerModel.OnUpdate?.Invoke();
+            Model.DeltaTime = deltaTime;
+            Model.OnUpdate?.Invoke();
         }
+        
+        private void ViewDead() => _game.GameOver();
 
         private void ModelPositionChanged() => 
-            _playerView.SetPosition(_playerModel.Transform.Position);
+            View.SetPosition(Model.Transform.Position);
         
         private void ModelRotationChanged() => 
-            _playerView.SetRotation(_playerModel.Transform.Rotation);
+            View.SetRotation(Model.Transform.Rotation);
     }
 }

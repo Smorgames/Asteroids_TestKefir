@@ -1,4 +1,4 @@
-﻿using DataStructers;
+﻿using DataContainers;
 
 namespace Logic
 {
@@ -7,8 +7,8 @@ namespace Logic
         private const float Offset = 0.05f;
         
         private readonly Transform2D _transform;
-        private readonly float _xLimit;
-        private float _yLimit;
+        private static float _xLimit;
+        private static float _yLimit;
 
         public Teleport(float xLimit, float yLimit, Transform2D transform)
         {

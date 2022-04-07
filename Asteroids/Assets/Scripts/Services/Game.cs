@@ -1,10 +1,15 @@
-﻿using DataStructers;
+﻿using Data;
+using DataContainers;
 using Enums;
 using Logic;
 using Logic.Player;
 using Logic.Pools;
+using Services.AssetProviding;
+using Services.GameObjectCreating;
+using Services.Randomizing;
+using Services.SceneLoading;
+using Services.UICreating;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Services
 {
@@ -23,31 +28,77 @@ namespace Services
         private const int EnemyScorePoint = 500;
 
         private readonly GameFactory _gameFactory;
+        private readonly FactoryForUI _factoryForUI;
         private readonly Randomizer _randomizer;
-        private readonly SceneManager _sceneManager;
+        private readonly SceneLoader _sceneLoader;
         private readonly HazardSpawner _hazardSpawner;
         private readonly PlayerController _playerController;
-        
+        private readonly LosePanelHandler _losePanelHandler;
+        private readonly AssetProvider _assetProvider;
+
         private readonly BulletPool _bulletPool;
         private readonly EnemyPool _enemyPool;
         private readonly MeteorPool _meteorPool;
         private readonly LaserPool _laserPool;
 
+        private int _score;
+
         public Game()
         {
-            _gameFactory = new GameFactory();
+            _assetProvider = new AssetProvider();
+            _factoryForUI = new FactoryForUI();
+            _factoryForUI.CreateEventSystem();
+            var camera = _factoryForUI.CreateCamera();
+            var canvasComponents = _factoryForUI.CreateMainCanvas(camera);
+            
+            _gameFactory = new GameFactory(_assetProvider);
             _bulletPool = new BulletPool(BulletAmount, _gameFactory);
             _laserPool = new LaserPool(MaxLaserAmount, _gameFactory);
-            _playerController = _gameFactory.CreatePlayer(new UniVector2(), _bulletPool, _laserPool, MaxLaserAmount);
+            var playerData = new PlayerData()
+            {
+                Speed = 2f,
+                RotationSpeed = 150f,
+                SlowdownTime = 1f,
+                AccelerationLimit = 1f,
+                AccelerationTime = 1f,
+                LaserReload = 2f,
+                MaxLaserAmount = 4,
+                StartPosition = new UniVector2(),
+                StartDirection = new UniVector2(0f, 1f),
+                TeleportLimits = new UniVector2(9.05f, 5.15f)
+            };
+            _playerController = 
+                _gameFactory.CreatePlayer(playerData, _bulletPool, _laserPool, this);
 
             _randomizer = new Randomizer();
-            _sceneManager = new SceneManager();
-            _enemyPool = new EnemyPool(EnemySpeed, EnemyAmount, _gameFactory, this, _playerController, EnemyScorePoint);
-            _meteorPool = new MeteorPool(
-                NormalMeteorSpeed, NormalMeteorAmount, SmallMeteorSpeed, SmallMeteorAmount, 
-                _gameFactory, this, NormalMeteorScorePoint, SmallMeteorScorePoint);
+            _sceneLoader = new SceneLoader();
 
-            _hazardSpawner = new HazardSpawner(_meteorPool, _enemyPool);
+            var enemyData = new EnemyData()
+            {
+                Speed = EnemySpeed,
+                ScorePoint = EnemyScorePoint
+            };
+            _enemyPool = 
+                new EnemyPool(enemyData, EnemyAmount, _gameFactory, this, _playerController);
+
+            var smallMeteorData = new MeteorData()
+            {
+                ScorePoint = SmallMeteorScorePoint,
+                Speed = SmallMeteorSpeed,
+                Type = MeteorType.Small,
+                TeleportLimit = new UniVector2(9.05f, 5.15f)
+            };
+            var normalMeteorData = new MeteorData()
+            {
+                ScorePoint = NormalMeteorScorePoint,
+                Speed = NormalMeteorSpeed,
+                Type = MeteorType.Normal,
+                TeleportLimit = new UniVector2(9.05f, 5.15f)
+            };
+            _meteorPool = 
+                new MeteorPool(normalMeteorData, smallMeteorData, NormalMeteorAmount, SmallMeteorAmount, _gameFactory, this, _randomizer);
+
+            _hazardSpawner = new HazardSpawner(_meteorPool, _enemyPool, _randomizer);
 
             for (var i = 0; i < EnemyAmount; i++)
                 _hazardSpawner.SpawnEnemy();
@@ -55,12 +106,31 @@ namespace Services
             for (var i = 0; i < NormalMeteorAmount; i++)
                 _hazardSpawner.SpawnMeteor(MeteorType.Normal);
 
-            var playerIndicatorHandler = Object.FindObjectOfType<PlayerIndicatorHandler>();
+            var playerIndicatorHandler = canvasComponents.PlayerIndicatorHandler;
             playerIndicatorHandler.Construct(_playerController);
+            _losePanelHandler = canvasComponents.LosePanelHandler;
+            _losePanelHandler.Construct(_sceneLoader);
         }
 
-        public void EnemyDead() => _hazardSpawner.SpawnEnemy();
-        
-        public void MeteorDead() => _hazardSpawner.SpawnMeteor(MeteorType.Normal);
+        public void EnemyDead(IScore iScore)
+        {
+            AddScore(iScore);
+            _hazardSpawner.SpawnEnemy();
+        }
+
+        public void MeteorDead(IScore iScore)
+        {
+            AddScore(iScore);
+            _hazardSpawner.SpawnMeteor(MeteorType.Normal);
+        }
+
+        public void GameOver()
+        {
+            Time.timeScale = 0f;
+            _losePanelHandler.SetScore(_score);
+            _losePanelHandler.ShowLosePanel();
+        }
+
+        private void AddScore(IScore iScore) => _score += iScore.GetScorePoint();
     }
 }

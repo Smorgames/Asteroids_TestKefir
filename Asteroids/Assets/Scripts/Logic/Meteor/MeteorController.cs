@@ -31,7 +31,7 @@ namespace Logic.Meteor
         {
             Model.Dead();
             Model.Pool.Destroy(this, Model.Type);
-            _game.MeteorDead();
+            _game.MeteorDead(Model);
         }
 
         private void ViewMoveRequest(float deltaTime) => 

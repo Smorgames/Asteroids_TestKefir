@@ -1,6 +1,7 @@
 ﻿using System;
-using DataStructers;
+using DataContainers;
 using ExtensionsDirectory;
+using Tags;
 using UnityEngine;
 
 namespace View
@@ -15,11 +16,13 @@ namespace View
         public Action OnBulletFireRequest;
         public Action OnAccelerateRequest;
         public Action OnSlowdownRequest;
+        public Action OnDead;
 
         [SerializeField] private Transform _laserSpawnPoint;
 
         private void Update()
         {
+            
             OnDeltaTimeUpdate?.Invoke(Time.deltaTime);
 
             if (Input.GetKey(KeyCode.W)) 
@@ -35,6 +38,14 @@ namespace View
 
             if (Input.GetKeyDown(KeyCode.L)) 
                 OnLaserFireRequest?.Invoke(_laserSpawnPoint.position.ToUniVector2());
+        }
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            var enemy = col.GetComponent<EnemyTag>();
+
+            if (enemy != null) 
+                OnDead?.Invoke();
         }
 
         public void SetPosition(UniVector2 position) => 

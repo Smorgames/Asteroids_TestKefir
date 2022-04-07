@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
-using DataStructers;
+using Data;
+using DataContainers;
 using Enums;
 using Logic.Meteor;
 using Services;
+using Services.GameObjectCreating;
+using Services.Randomizing;
 
 namespace Logic.Pools
 {
@@ -15,18 +18,21 @@ namespace Logic.Pools
         private readonly Queue<MeteorController> _smallMeteorPool;
         private readonly Queue<MeteorController> _normalMeteorPool;
 
-        public MeteorPool(float normalMeteorSpeed, int normalMeteorPoolCapacity, float smallMeteorSpeed, int smallMeteorPoolCapacity, 
-            GameFactory gameFactory, Game game, int normalMeteorScorePoint, int smallMeteorScorePoint)
+        public MeteorPool(MeteorData normalMeteorData, MeteorData smallMeteorData, int normalMeteorPoolCapacity, 
+            int smallMeteorPoolCapacity, GameFactory gameFactory, Game game, Randomizer randomizer)
         {
             _normalMeteorPool = new Queue<MeteorController>(normalMeteorPoolCapacity);
             _smallMeteorPool = new Queue<MeteorController>(smallMeteorPoolCapacity);
 
             var normalMeteorContainer = gameFactory.CreateEmpty(NormalMeteorContainerName);
             var smallMeteorContainer = gameFactory.CreateEmpty(SmallMeteorContainerName);
+            
+            normalMeteorData.StartPosition = _spawnPosition;
+            smallMeteorData.StartPosition = _spawnPosition;
 
             for (var i = 0; i < normalMeteorPoolCapacity; i++)
             {
-                var normalMeteorController = gameFactory.CreateMeteor(normalMeteorSpeed, _spawnPosition, new UniVector2(), this, game, normalMeteorScorePoint);
+                var normalMeteorController = gameFactory.CreateMeteor(normalMeteorData, this, game, randomizer);
                 normalMeteorController.View.gameObject.transform.parent = normalMeteorContainer.transform;
                 normalMeteorController.View.gameObject.SetActive(false);
                 _normalMeteorPool.Enqueue(normalMeteorController);
@@ -34,7 +40,7 @@ namespace Logic.Pools
 
             for (var i = 0; i < smallMeteorPoolCapacity; i++)
             {
-                var smallMeteorController = gameFactory.CreateSmallMeteor(smallMeteorSpeed, _spawnPosition, new UniVector2(), this, game, smallMeteorScorePoint);
+                var smallMeteorController = gameFactory.CreateSmallMeteor(smallMeteorData, this, game, randomizer);
                 smallMeteorController.View.gameObject.transform.parent = smallMeteorContainer.transform;
                 smallMeteorController.View.gameObject.SetActive(false);
                 _smallMeteorPool.Enqueue(smallMeteorController);
