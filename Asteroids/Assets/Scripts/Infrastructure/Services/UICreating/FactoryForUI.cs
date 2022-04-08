@@ -12,7 +12,7 @@ namespace Infrastructure.Services.UICreating
 
         public CanvasComponents CreateUIGameSetup()
         {
-            CreateEventSystem();
+            //CreateEventSystem();
             var camera = CreateCamera();
             return CreateMainCanvas(camera);
         }
