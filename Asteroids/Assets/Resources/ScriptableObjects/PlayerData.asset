@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b504665e504be2b2c8e7d496ca04fa, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: 
+  Speed: 2
+  RotationSpeed: 150
+  SlowdownTime: 1
+  AccelerationTime: 1
+  AccelerationLimit: 1
+  LaserReload: 2
+  MaxLaserAmount: 4
+  StartPosition:
+    X: 0
+    Y: 0
+  StartDirection:
+    X: 0
+    Y: 1
+  TeleportLimits:
+    X: 9.05
+    Y: 5.15

@@ -5,9 +5,6 @@ namespace ExtensionsDirectory
 {
     public static class Extensions
     {
-        public static UniVector2 ToUniVector2(this Vector2 vector2) =>
-            new UniVector2(vector2.x, vector2.y);
-    
         public static UniVector2 ToUniVector2(this Vector3 vector3) =>
             new UniVector2(vector3.x, vector3.y);
     

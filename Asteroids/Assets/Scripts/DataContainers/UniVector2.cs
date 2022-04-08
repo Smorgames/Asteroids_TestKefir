@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using Infrastructure.Services.Math;
 
 namespace DataContainers
 {
@@ -6,8 +6,18 @@ namespace DataContainers
     public class UniVector2
     {
         public float X, Y;
-    
-        public UniVector2() => X = Y = 0f;
+
+        private static IMathModule _mathModule;
+        
+        public UniVector2()
+        {
+            X = Y = 0f;
+        }
+
+        public UniVector2(IMathModule mathModule)
+        {
+            _mathModule ??= mathModule;
+        }
 
         public UniVector2(float x, float y)
         {
@@ -23,7 +33,7 @@ namespace DataContainers
             return this;
         }
     
-        public float Magnitude => Mathf.Sqrt(X * X + Y * Y);
+        public float Magnitude => _mathModule.Sqrt(X * X + Y * Y);
 
         public UniVector2 Copy() => new UniVector2(X, Y);
 

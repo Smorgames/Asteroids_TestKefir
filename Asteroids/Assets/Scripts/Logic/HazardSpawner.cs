@@ -1,9 +1,8 @@
 using DataContainers;
 using Enums;
-using Logic.Pools;
-using Services;
-using Services.GameObjectCreating;
-using Services.Randomizing;
+using Infrastructure.Services.Randomizing;
+using Logic.Pools.EnemyPoolDirectory;
+using Logic.Pools.MeteorPoolDirectory;
 
 namespace Logic
 {
@@ -12,12 +11,11 @@ namespace Logic
         private const float XLimit = 14f;
         private const float YLimit = 9f;
 
-        private readonly GameFactory _gameFactory;
-        private readonly EnemyPool _enemyPool;
-        private readonly MeteorPool _meteorPool;
-        private readonly Randomizer _randomizer;
+        private readonly IEnemyPool _enemyPool;
+        private readonly IMeteorPool _meteorPool;
+        private readonly IRandomizer _randomizer;
         
-        public HazardSpawner(MeteorPool meteorPool, EnemyPool enemyPool, Randomizer randomizer)
+        public HazardSpawner(IMeteorPool meteorPool, IEnemyPool enemyPool, IRandomizer randomizer)
         {
             _meteorPool = meteorPool;
             _enemyPool = enemyPool;
