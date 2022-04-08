@@ -6,6 +6,7 @@ using Infrastructure.Services.GameFactoryDirectory;
 using Infrastructure.Services.Math;
 using Infrastructure.Services.Randomizing;
 using Infrastructure.Services.SceneLoading;
+using Infrastructure.Services.TimeScaleManagement;
 using Infrastructure.Services.UICreating;
 using Logic;
 using Logic.Controllers;
@@ -16,7 +17,6 @@ using Logic.Pools.LaserPoolDirectory;
 using Logic.Pools.MeteorPoolDirectory;
 using Logic.UIHandlers;
 using ScriptableObjects;
-using UnityEngine;
 
 namespace Infrastructure.GameDirectory
 {
@@ -31,6 +31,7 @@ namespace Infrastructure.GameDirectory
 
         private readonly HazardSpawner _hazardSpawner;
         private LosePanelHandler _losePanelHandler;
+        private readonly ITimeScaleManager _timeScaleManager;
 
         private int _score;
 
@@ -38,6 +39,8 @@ namespace Infrastructure.GameDirectory
         {
             IMathModule mathModule = new MathModule();
             var initUniVector2 = new UniVector2(mathModule);
+
+            _timeScaleManager = new TimeScaleManager();
             
             IAssetProvider assetProvider = new AssetProvider();
             var bulletData = assetProvider.LoadAsset<BulletData>(BulletDataPath);
@@ -58,7 +61,9 @@ namespace Infrastructure.GameDirectory
             var playerController = gameFactory.CreatePlayer(playerData, bulletPool, laserPool, this);
 
             IRandomizer randomizer = new Randomizer();
-            ISceneLoader sceneLoader = new SceneLoader();
+            
+            
+            ISceneLoader sceneLoader = new SceneLoader(_timeScaleManager);
             
             IEnemyPool enemyPool = new EnemyPool(enemyData, entityAmountData.EnemyAmount, gameFactory, this, playerController);
             
@@ -86,12 +91,12 @@ namespace Infrastructure.GameDirectory
 
         public void GameOver()
         {
-            Time.timeScale = 0f;
+            _timeScaleManager.SetTimeScale(0f);
             _losePanelHandler.SetScore(_score);
             _losePanelHandler.ShowLosePanel();
         }
 
-        public void AddScore(IScore iScore) => 
+        private void AddScore(IScore iScore) => 
             _score += iScore.GetScorePoint();
 
         private void SetHandlersForUI(CanvasComponents canvasComponents, PlayerController playerController, ISceneLoader sceneLoader)

@@ -7,6 +7,5 @@ namespace Infrastructure.GameDirectory
         void EnemyDead(IScore iScore);
         void MeteorDead(IScore iScore);
         void GameOver();
-        void AddScore(IScore iScore);
     }
 }
