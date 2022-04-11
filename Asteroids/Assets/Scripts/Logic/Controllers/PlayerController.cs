@@ -28,7 +28,7 @@ namespace Logic.Controllers
             View.OnRotateRequest += ViewRotateRequest;
             View.OnBulletFireRequest += ViewBulletFireRequest;
             View.OnLaserFireRequest += ViewLaserFireRequest;
-            View.OnDeltaTimeUpdate += ViewDeltaTimeUpdate;
+            View.OnDeltaTimeUpdate += ViewUpdate;
             View.OnDead += ViewDead;
             
             Model.Transform.OnPositionChanged += ModelPositionChanged;
@@ -50,7 +50,7 @@ namespace Logic.Controllers
         private void ViewLaserFireRequest(UniVector2 laserSpawnPosition) => 
             Model.FireLaserGun(laserSpawnPosition);
         
-        private void ViewDeltaTimeUpdate(float deltaTime)
+        private void ViewUpdate(float deltaTime)
         {
             Model.DeltaTime = deltaTime;
             Model.OnUpdate?.Invoke();
