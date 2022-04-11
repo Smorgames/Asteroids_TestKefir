@@ -1,4 +1,4 @@
-﻿using Infrastructure.GameDirectory;
+﻿using Infrastructure.Services;
 using UnityEngine;
 
 namespace Infrastructure
