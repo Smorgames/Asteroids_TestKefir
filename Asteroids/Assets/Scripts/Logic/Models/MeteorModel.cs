@@ -1,30 +1,25 @@
-﻿using Components;
-using DataContainers;
+﻿using System;
+using Components;
 using Enums;
-using Infrastructure.Services.Randomizing;
 using Logic.Interfaces;
-using Logic.Pools.MeteorPoolDirectory;
 using ScriptableObjects;
 
 namespace Logic.Models
 {
     public class MeteorModel : IScore
     {
-        private const int SmallMeteorAmount = 2;
+        public Action OnDead;
 
         public Transform2D Transform { get; }
         public MeteorType Type { get; }
-        public IMeteorPool Pool { get; }
+        public int SmallMeteorAmount => 2;
 
         private readonly Teleport _teleport;
         private readonly MeteorData _meteorData;
-        private readonly IRandomizer _randomizer;
 
-        public MeteorModel(MeteorData data, IMeteorPool meteorPool, IRandomizer randomizer)
+        public MeteorModel(MeteorData data)
         {
             _meteorData = data;
-            _randomizer = randomizer;
-            Pool = meteorPool;
             Type = data.Type;
             Transform = new Transform2D { Position = data.StartPosition };
             _teleport = new Teleport(data.TeleportLimit.X, data.TeleportLimit.Y, Transform);
@@ -42,12 +37,8 @@ namespace Logic.Models
         {
             if (Type == MeteorType.Small)
                 return;
-            
-            for (var i = 0; i < SmallMeteorAmount; i++)
-            {
-                var randomDirection = new UniVector2(_randomizer.Random(-1f, 1f), _randomizer.Random(-1f, 1f)).Normalize();
-                Pool.Instantiate(Transform.Position, randomDirection, MeteorType.Small);
-            }
+
+            OnDead?.Invoke();
         }
 
         public int GetScorePoint() => _meteorData.ScorePoint;

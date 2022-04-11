@@ -60,10 +60,10 @@ namespace Infrastructure.Services.GameFactoryDirectory
 
         public MeteorController CreateMeteor(MeteorData data, IMeteorPool meteorPool, IGame game, IRandomizer randomizer)
         {
-            var model = new MeteorModel(data, meteorPool, randomizer);
+            var model = new MeteorModel(data);
             var meteorPref = _assetProvider.LoadAsset<MeteorView>(MeteorPath);
             var view = Object.Instantiate(meteorPref, data.StartPosition.ToVector2(), Quaternion.identity);
-            var controller = new MeteorController(model, view, game);
+            var controller = new MeteorController(model, view, game, randomizer, meteorPool);
             return controller;
         }
 
@@ -78,10 +78,10 @@ namespace Infrastructure.Services.GameFactoryDirectory
 
         public MeteorController CreateSmallMeteor(MeteorData data, IMeteorPool meteorPool, IGame game, IRandomizer randomizer)
         {
-            var model = new MeteorModel(data, meteorPool, randomizer);
+            var model = new MeteorModel(data);
             var meteorPref = _assetProvider.LoadAsset<MeteorView>(SmallMeteorPath);
             var view = Object.Instantiate(meteorPref, data.StartPosition.ToVector2(), Quaternion.identity);
-            var controller = new MeteorController(model, view, game);
+            var controller = new MeteorController(model, view, game, randomizer, meteorPool);
             return controller;
         }
 
