@@ -11,7 +11,7 @@ namespace Logic.Models
     public class MeteorModel : IScore
     {
         private const int SmallMeteorAmount = 2;
-        
+
         public Transform2D Transform { get; }
         public MeteorType Type { get; }
         public IMeteorPool Pool { get; }

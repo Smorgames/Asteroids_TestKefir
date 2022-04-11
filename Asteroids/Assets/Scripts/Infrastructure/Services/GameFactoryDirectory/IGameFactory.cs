@@ -14,7 +14,7 @@ namespace Infrastructure.Services.GameFactoryDirectory
 {
     public interface IGameFactory
     {
-        PlayerController CreatePlayer(PlayerData data, IBulletPool bulletPool, ILaserPool laserPool, IGame game);
+        PlayerController CreatePlayer(PlayerData data, IGame game, IBulletPool bulletPool, ILaserPool laserPool);
         BulletController CreateBullet(BulletData data, IBulletPool bulletPool);
         LaserController CreateLaser(UniVector2 startPosition, float rotation, ILaserPool laserPool);
         MeteorController CreateMeteor(MeteorData data, IMeteorPool meteorPool, IGame game, IRandomizer randomizer);

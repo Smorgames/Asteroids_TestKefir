@@ -58,7 +58,7 @@ namespace Infrastructure.GameDirectory
             
             IBulletPool bulletPool = new BulletPool(entityAmountData.BulletAmount, gameFactory, bulletData);
             ILaserPool laserPool = new LaserPool(playerData.MaxLaserAmount, gameFactory);
-            var playerController = gameFactory.CreatePlayer(playerData, bulletPool, laserPool, this);
+            var playerController = gameFactory.CreatePlayer(playerData, this, bulletPool, laserPool);
 
             IRandomizer randomizer = new Randomizer();
             

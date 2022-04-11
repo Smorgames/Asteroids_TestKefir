@@ -30,9 +30,10 @@ namespace Infrastructure.Services.GameFactoryDirectory
         public GameFactory(IAssetProvider assetProvider) => 
             _assetProvider = assetProvider;
 
-        public PlayerController CreatePlayer(PlayerData data, IBulletPool bulletPool, ILaserPool laserPool, IGame game)
+        public PlayerController CreatePlayer(PlayerData data, IGame game, IBulletPool bulletPool, ILaserPool laserPool)
         {
-            var model = new PlayerModel(data, bulletPool, laserPool);
+            var model = new PlayerModel(data);
+            var gunsController = new GunsController(model, laserPool, bulletPool);
             var playerPref = _assetProvider.LoadAsset<PlayerView>(PlayerPath);
             var view = Object.Instantiate(playerPref, data.StartPosition.ToVector2(), Quaternion.identity);
             var controller = new PlayerController(model, view, game);

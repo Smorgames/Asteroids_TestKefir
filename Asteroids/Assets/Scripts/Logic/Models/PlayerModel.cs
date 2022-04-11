@@ -1,8 +1,6 @@
 using System;
 using Components;
 using DataContainers;
-using Logic.Pools.BulletPoolDirectory;
-using Logic.Pools.LaserPoolDirectory;
 using ScriptableObjects;
 
 namespace Logic.Models
@@ -16,19 +14,19 @@ namespace Logic.Models
         public float DeltaTime { get; set; }
         public Transform2D Transform { get; }
         public LaserGunModel LaserGunModel { get; }
+        public BulletGunModel BulletGunModel { get; }
 
-        private readonly BulletGunModel _bulletGunModel;
         private readonly Teleport _teleport;
         private readonly PlayerData _playerData;
         private UniVector2 _acceleration;
 
-        public PlayerModel(PlayerData data, IBulletPool bulletPool, ILaserPool laserPool)
+        public PlayerModel(PlayerData data)
         {
             _playerData = data;
             _acceleration = new UniVector2();
             Transform = new Transform2D(data.StartPosition, data.StartDirection);
-            _bulletGunModel = new BulletGunModel(this, bulletPool);
-            LaserGunModel = new LaserGunModel(data.LaserReload, data.MaxLaserAmount, this, laserPool);
+            BulletGunModel = new BulletGunModel();
+            LaserGunModel = new LaserGunModel(data.LaserReload, data.MaxLaserAmount, this);
             _teleport = new Teleport(data.TeleportLimits.X, data.TeleportLimits.Y, Transform);
         }
 
@@ -59,8 +57,7 @@ namespace Logic.Models
             Transform.Rotation = rotation;
         }
 
-        public void FireBulletGun() =>
-            _bulletGunModel.Fire();
+        public void FireBulletGun() => BulletGunModel.Fire();
 
         public void FireLaserGun(UniVector2 laserSpawnPosition) => 
             LaserGunModel.Fire(laserSpawnPosition, Transform.Rotation - LaserRotationOffset);

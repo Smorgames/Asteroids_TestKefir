@@ -20,7 +20,7 @@ namespace Logic.UIHandlers
 
             _playerController.Model.Transform.OnPositionChanged += PlayerPositionChanged;
             _playerController.Model.Transform.OnRotationChanged += PlayerRotationChanged;
-            _playerController.Model.LaserGunModel.OnFired += LaserAmountChanged;
+            _playerController.Model.LaserGunModel.WasFired += LaserAmountChanged;
             _playerController.Model.LaserGunModel.OnReloaded += LaserAmountChanged;
             _playerController.Model.LaserGunModel.OnCounterTick += TimeToCooldownChanged;
 

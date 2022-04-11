@@ -1,12 +1,12 @@
 ﻿using System;
 using DataContainers;
-using Logic.Pools.LaserPoolDirectory;
 
 namespace Logic.Models
 {
     public class LaserGunModel
     {
-        public Action OnFired;
+        public Action<UniVector2, float> OnFire;
+        public Action WasFired;
         public Action OnReloaded;
         public Action OnCounterTick;
         
@@ -15,13 +15,11 @@ namespace Logic.Models
         public Counter Counter { get; }
 
         private readonly PlayerModel _playerModel;
-        private readonly ILaserPool _laserPool;
 
-        public LaserGunModel(float reloadTime, int maxLaserAmount, PlayerModel playerModel, ILaserPool laserPool)
+        public LaserGunModel(float reloadTime, int maxLaserAmount, PlayerModel playerModel)
         {
             _playerModel = playerModel;
             MaxLaserAmount = maxLaserAmount;
-            _laserPool = laserPool;
             CurrentLaserAmount = MaxLaserAmount;
             Counter = new Counter(reloadTime);
             _playerModel.OnUpdate += Update;
@@ -48,10 +46,10 @@ namespace Logic.Models
             if (CurrentLaserAmount <= 0)
                 return;
             
-            _laserPool.Instantiate(laserSpawnPosition, rotation);
+            OnFire?.Invoke(laserSpawnPosition, rotation);
             CurrentLaserAmount--;
             Counter.Reloaded = false;
-            OnFired?.Invoke();
+            WasFired?.Invoke();
         }
     }
 }

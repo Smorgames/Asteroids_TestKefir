@@ -1,19 +1,11 @@
-﻿using Logic.Pools.BulletPoolDirectory;
+﻿using System;
 
 namespace Logic.Models
 {
     public class BulletGunModel
     {
-        private readonly PlayerModel _playerModel;
-        private readonly IBulletPool _bulletPool;
-        
-        public BulletGunModel(PlayerModel playerModel, IBulletPool bulletPool)
-        {
-            _playerModel = playerModel;
-            _bulletPool = bulletPool;
-        }
+        public Action OnFire;
 
-        public void Fire() => 
-            _bulletPool.Instantiate(_playerModel.Transform.Position, _playerModel.Transform.Direction.Copy());
+        public void Fire() => OnFire?.Invoke();
     }
 }
